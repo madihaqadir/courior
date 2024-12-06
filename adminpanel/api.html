@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Finder</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#movie-info {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#poster {
+    width: 200px;
+    height: 300px;
+    margin: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+p {
+    margin-bottom: 10px;
+}
+    </style>
+</head>
+<body>
+    <h1>Movie Finder</h1>
+    <input type="text" id="movie-input" placeholder="Enter movie name">
+    <button type="button" onclick="getMovie()">Search</button>
+    <div id="movie-info">
+        <p id="title"></p>
+        <p id="year"></p>
+        <p id="writer"></p>
+        <p id="director"></p>
+        <p id="awards"></p>
+        <p id="cast"></p>
+        <img id="poster" src="" alt="Movie Poster">
+    </div>
+
+  
+</body>
+<script>
+    const apiKey = "4c166871";
+const apiUrl = "http://www.omdbapi.com/?t=";
+
+async function getMovie() {
+const movieInput = document.getElementById("movie-input").value.trim();
+if (!movieInput) {
+    alert("Please enter a movie name");
+    return;
+}
+
+try {
+    const response = await fetch(`${apiUrl}${movieInput}&apikey=${apiKey}`);
+    const data = await response.json();
+
+    if (data.Response === "False") {
+        alert("Movie not found");
+        return;
+    }
+
+    document.getElementById("title").innerHTML = `Title: ${data.Title}`;
+    document.getElementById("year").innerHTML = `Year: ${data.Year}`;
+    document.getElementById("writer").innerHTML = `Writer: ${data.Writer}`;
+    document.getElementById("director").innerHTML = `Director: ${data.Director}`;
+    document.getElementById("awards").innerHTML = `Awards: ${data.Awards}`;
+    document.getElementById("cast").innerHTML = `Cast: ${data.Actors}`;
+    document.getElementById("poster").src = data.Poster;
+} catch (error) {
+    console.error(error);
+    alert("Error fetching movie data");
+}
+}
+</script>
+</html>
